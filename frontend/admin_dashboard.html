@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Question Paper Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #333;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 22px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #eeeeee;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1150px;
+            margin: 30px auto;
+        }
+
+        .welcome {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .welcome h1 {
+            color: #5a3d9b;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #777;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: #667eea;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #666;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #5a3d9b;
+            margin-bottom: 20px;
+        }
+
+        /* DEPARTMENT */
+
+        .department-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .department-form input {
+            flex: 1;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .department-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-department-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-department-btn:hover {
+            opacity: 0.9;
+        }
+
+        .department {
+            border: 1px solid #ddd;
+            padding: 14px 18px;
+            border-radius: 9px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .department-name {
+            font-weight: bold;
+            color: #444;
+        }
+
+        .delete-department-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete-department-btn:hover {
+            opacity: 0.85;
+        }
+
+        .user {
+            border: 1px solid #ddd;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info h3 {
+            color: #444;
+            margin-bottom: 7px;
+        }
+
+        .user-info p {
+            margin: 4px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .user-type {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            background: #eee;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .delete-user-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete-user-btn:hover {
+            opacity: 0.85;
+        }
+
+        .paper {
+            border: 1px solid #ddd;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .paper h3 {
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .paper p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .buttons {
+            margin-top: 12px;
+        }
+
+        .view-btn,
+        .download-btn,
+        .edit-btn,
+        .delete-btn {
+            display: inline-block;
+            padding: 8px 13px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-right: 7px;
+            font-size: 13px;
+        }
+
+        .view-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .download-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #f0ad4e;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .view-btn:hover,
+        .download-btn:hover,
+        .edit-btn:hover,
+        .delete-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* EDIT FORM */
+
+        .edit-box {
+            display: none;
+            background: #f8f9ff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .edit-box h3 {
+            color: #5a3d9b;
+            margin-bottom: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .edit-actions {
+            margin-top: 18px;
+        }
+
+        .save-btn,
+        .cancel-btn {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .save-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #777;
+            color: white;
+        }
+
+        .message {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+
+        @media (max-width: 700px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 15px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .user {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .department-form {
+                flex-direction: column;
+            }
+
+            .department {
+                gap: 10px;
+            }
+        }
+        /* Attractive dashboard UI */
+        .section,.welcome,.filters,.card { border:1px solid rgba(99,102,241,.10); box-shadow:0 14px 34px rgba(15,23,42,.08); border-radius:18px; }
+        .card:hover,.paper-card,.syllabus-card,.paper { transition:transform .2s ease, box-shadow .2s ease; }
+        .card:hover,.paper-card:hover,.syllabus-card:hover,.paper:hover { transform:translateY(-2px); box-shadow:0 16px 34px rgba(15,23,42,.10); }
+        input[type=file] { background:#fafbff; border:1px dashed #a5b4fc; border-radius:12px; padding:12px; }
+        button,.view-btn,.download-btn,.edit-btn,.delete-btn { transition:transform .15s ease, opacity .15s ease; }
+        button:hover,.view-btn:hover,.download-btn:hover,.edit-btn:hover,.delete-btn:hover { transform:translateY(-1px); opacity:.92; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <h2>Admin Dashboard</h2>
+
+    <button class="logout-btn" onclick="logout()">
+        Logout
+    </button>
+
+</div>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>Welcome, Admin 👋</h1>
+
+        <p>
+            Manage users, departments and question papers
+            in the Question Paper Management System.
+        </p>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2 id="userCount">0</h2>
+
+            <p>Total Users</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2 id="paperCount">0</h2>
+
+            <p>Total Question Papers</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2 id="departmentCount">0</h2>
+
+            <p>Total Departments</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUESTION PAPER UPLOAD -->
+
+    <div class="section">
+
+        <h2>📤 Upload Question Paper</h2>
+
+        <form id="adminUploadForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Faculty Name</label>
+                    <input id="adminFacultyName" type="text" placeholder="Enter faculty name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="adminDepartment" required>
+                        <option value="">Loading departments...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Level</label>
+                    <select id="adminLevel" required>
+                        <option value="">Select Level</option>
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Semester</label>
+                    <select id="adminSemester" required>
+                        <option value="">Select Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input id="adminSubject" type="text" placeholder="Enter subject name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Paper Type</label>
+                    <select id="adminPaperType" required>
+                        <option value="">Select Paper Type</option>
+                        <option value="Internal 1">Internal 1</option>
+                        <option value="Internal 2">Internal 2</option>
+                        <option value="Internal 3">Internal 3</option>
+                        <option value="Model">Model</option>
+                        <option value="University">University</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Year</label>
+                    <input id="adminYear" type="number" min="2000" max="2100" placeholder="Enter year" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Exam Date &amp; Time</label>
+                    <input id="adminExamDate" type="datetime-local">
+                </div>
+
+                <div class="form-group">
+                    <label>PDF File</label>
+                    <input id="adminFile" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+                </div>
+
+            </div>
+
+            <button type="submit" class="save-btn" style="margin-top:18px;">📤 Upload Question Paper</button>
+            <div id="adminUploadMessage" class="message" style="display:none;"></div>
+
+        </form>
+
+    </div>
+
+
+    <!-- DEPARTMENT MANAGEMENT -->
+
+    <div class="section">
+
+        <h2>🏫 Department Management</h2>
+
+
+        <form
+            class="department-form"
+            onsubmit="addDepartment(event)"
+        >
+
+            <input
+                type="text"
+                id="departmentName"
+                placeholder="Enter department name"
+                required
+            >
+
+            <button
+                type="submit"
+                class="add-department-btn"
+            >
+                ➕ Add Department
+            </button>
+
+        </form>
+
+
+        <div id="departmentsList">
+
+            <div class="message">
+                Loading departments...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- USER MANAGEMENT -->
+
+    <div class="section">
+
+        <h2>👥 User Management</h2>
+
+        <div id="usersList">
+
+            <div class="message">
+                Loading users...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- QUESTION PAPERS -->
+
+    <div class="section">
+
+        <h2>📄 All Question Papers</h2>
+
+        <div id="papersList">
+
+            <div class="message">
+                Loading question papers...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API_URL = "http://127.0.0.1:8000";
+const USER_TYPE = "admin";
+
+
+/* ==========================================
+   ADMIN QUESTION PAPER UPLOAD
+========================================== */
+
+document.getElementById("adminUploadForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const file = document.getElementById("adminFile").files[0];
+    const message = document.getElementById("adminUploadMessage");
+
+    if (!file || file.type !== "application/pdf") {
+        message.style.display = "block";
+        message.className = "message";
+        message.style.color = "#b00020";
+        message.textContent = "Please select a PDF file.";
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("faculty_name", document.getElementById("adminFacultyName").value.trim());
+    formData.append("department", document.getElementById("adminDepartment").value);
+    formData.append("level", document.getElementById("adminLevel").value);
+    formData.append("semester", document.getElementById("adminSemester").value);
+    formData.append("subject", document.getElementById("adminSubject").value.trim());
+    formData.append("paper_type", document.getElementById("adminPaperType").value);
+    formData.append("year", document.getElementById("adminYear").value);
+    formData.append("file", file);
+    formData.append("user_type", USER_TYPE);
+
+    const examDate = document.getElementById("adminExamDate").value;
+    if (examDate) formData.append("exam_date", examDate);
+
+    try {
+        const response = await fetch(`${API_URL}/upload-question-paper`, {
+            method: "POST",
+            body: formData
+        });
+        const data = await response.json();
+
+        message.style.display = "block";
+        if (response.ok) {
+            message.style.color = "#207a35";
+            message.textContent = `Question paper uploaded successfully! Paper ID: ${data.paper_id}`;
+            document.getElementById("adminUploadForm").reset();
+            loadPapers();
+        } else {
+            message.style.color = "#b00020";
+            message.textContent = data.detail || "Upload failed.";
+        }
+    } catch (error) {
+        console.error(error);
+        message.style.display = "block";
+        message.style.color = "#b00020";
+        message.textContent = "Cannot connect to the server.";
+    }
+});
+
+
+/* ==========================================
+   DEPARTMENT MANAGEMENT
+========================================== */
+
+async function loadDepartments() {
+
+    const departmentsList =
+        document.getElementById("departmentsList");
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/departments"
+            );
+
+        const departments =
+            await response.json();
+
+        if (!response.ok) {
+
+            departmentsList.innerHTML =
+                '<div class="message">Unable to load departments.</div>';
+
+            return;
+        }
+
+
+        document.getElementById(
+            "departmentCount"
+        ).textContent =
+            departments.length;
+
+
+        if (departments.length === 0) {
+
+            departmentsList.innerHTML =
+                '<div class="message">No departments added yet.</div>';
+
+            return;
+        }
+
+
+        const adminDepartment = document.getElementById("adminDepartment");
+        if (adminDepartment) {
+            adminDepartment.innerHTML = `<option value="">Select Department</option>` + departments.map(d => `<option value="${d.name}">${d.name}</option>`).join("");
+        }
+
+        departmentsList.innerHTML = "";
+
+
+        departments.forEach(department => {
+
+            const departmentDiv =
+                document.createElement("div");
+
+            departmentDiv.className =
+                "department";
+
+
+            departmentDiv.innerHTML = `
+
+                <div class="department-name">
+
+                    🏫 ${department.name}
+
+                </div>
+
+
+                <button
+                    class="delete-department-btn"
+                    onclick="deleteDepartment(${department.id})"
+                >
+                    🗑️ Delete
+                </button>
+
+            `;
+
+
+            departmentsList.appendChild(
+                departmentDiv
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        departmentsList.innerHTML =
+            '<div class="message">Cannot connect to server.</div>';
+    }
+}
+
+
+/* ==========================================
+   ADD DEPARTMENT
+========================================== */
+
+async function addDepartment(event) {
+
+    event.preventDefault();
+
+
+    const departmentName =
+        document.getElementById(
+            "departmentName"
+        ).value.trim();
+
+
+    if (!departmentName) {
+
+        alert(
+            "Please enter department name."
+        );
+
+        return;
+    }
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "name",
+        departmentName
+    );
+
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/departments",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            alert(
+                "Department added successfully!"
+            );
+
+
+            document.getElementById(
+                "departmentName"
+            ).value = "";
+
+
+            loadDepartments();
+
+        } else {
+
+            alert(
+                data.detail ||
+                "Failed to add department."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Cannot connect to server."
+        );
+    }
+}
+
+
+/* ==========================================
+   DELETE DEPARTMENT
+========================================== */
+
+async function deleteDepartment(
+    departmentId
+) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this department?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/departments/${departmentId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            alert(
+                "Department deleted successfully!"
+            );
+
+
+            loadDepartments();
+
+        } else {
+
+            alert(
+                data.detail ||
+                "Failed to delete department."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Cannot connect to server."
+        );
+    }
+}
+
+
+/* ==========================================
+   LOAD USERS
+========================================== */
+
+async function loadUsers() {
+
+    const usersList =
+        document.getElementById("usersList");
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/users"
+            );
+
+        const users =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            usersList.innerHTML =
+                '<div class="message">Unable to load users.</div>';
+
+            return;
+        }
+
+
+        document.getElementById(
+            "userCount"
+        ).textContent =
+            users.length;
+
+
+        if (users.length === 0) {
+
+            usersList.innerHTML =
+                '<div class="message">No users found.</div>';
+
+            return;
+        }
+
+
+        usersList.innerHTML = "";
+
+
+        users.forEach(user => {
+
+            const userDiv =
+                document.createElement("div");
+
+            userDiv.className =
+                "user";
+
+
+            userDiv.innerHTML = `
+
+                <div class="user-info">
+
+                    <h3>${user.name}</h3>
+
+                    <p>
+                        <strong>ID:</strong>
+                        ${user.id}
+                    </p>
+
+                    <p>
+                        <strong>Username:</strong>
+                        ${user.username}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${user.email}
+                    </p>
+
+                    <span class="user-type">
+                        ${user.user_type}
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="delete-user-btn"
+                    onclick="deleteUser(${user.id})"
+                >
+                    🗑️ Delete User
+                </button>
+
+            `;
+
+
+            usersList.appendChild(
+                userDiv
+            );
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        usersList.innerHTML =
+            '<div class="message">Cannot connect to server.</div>';
+    }
+}
+
+
+/* ==========================================
+   DELETE USER
+========================================== */
+
+async function deleteUser(userId) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this user?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/users/${userId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            alert(
+                "User deleted successfully!"
+            );
+
+
+            loadUsers();
+
+        } else {
+
+            alert(
+                data.detail ||
+                "Failed to delete user."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Cannot connect to server."
+        );
+    }
+}
+
+
+/* ==========================================
+   LOAD QUESTION PAPERS
+========================================== */
+
+async function loadPapers() {
+
+    const papersList =
+        document.getElementById("papersList");
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL + "/question-papers?user_type=" + USER_TYPE
+            );
+
+
+        const papers =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            papersList.innerHTML =
+                '<div class="message">Unable to load question papers.</div>';
+
+            return;
+        }
+
+
+        document.getElementById(
+            "paperCount"
+        ).textContent =
+            papers.length;
+
+
+        if (papers.length === 0) {
+
+            papersList.innerHTML =
+                '<div class="message">No question papers available.</div>';
+
+            return;
+        }
+
+
+        papersList.innerHTML = "";
+
+
+        papers
+            .slice()
+            .reverse()
+            .forEach(paper => {
+
+                const paperDiv =
+                    document.createElement("div");
+
+
+                paperDiv.className =
+                    "paper";
+
+                const canManage = paper.can_manage === true;
+                const canDelete = paper.can_delete === true;
+
+
+                paperDiv.innerHTML = `
+
+                    <h3>
+                        ${paper.subject}
+                    </h3>
+
+
+                    <p>
+                        <strong>Paper ID:</strong>
+                        ${paper.id}
+                    </p>
+
+
+                    <p>
+                        <strong>Uploaded by:</strong>
+                        ${paper.faculty_name || "Not specified"}
+                    </p>
+
+                    <p>
+                        <strong>Department:</strong>
+                        ${paper.department}
+                    </p>
+
+
+                    <p>
+                        <strong>Level:</strong>
+                        ${paper.level}
+                    </p>
+
+
+                    <p>
+                        <strong>Semester:</strong>
+                        ${paper.semester}
+                    </p>
+
+
+                    <p>
+                        <strong>Paper Type:</strong>
+                        ${paper.paper_type}
+                    </p>
+
+
+                    <p>
+                        <strong>Year:</strong>
+                        ${paper.year}
+                    </p>
+
+
+                    <p>
+                        <strong>Exam Date:</strong>
+
+                        ${
+                            paper.exam_date
+                            ? new Date(
+                                paper.exam_date
+                              ).toLocaleString()
+                            : "Not specified"
+                        }
+
+                    </p>
+
+
+                    <p>
+                        <strong>File:</strong>
+
+                        ${
+                            paper.file_name ||
+                            "No file"
+                        }
+
+                    </p>
+
+
+                    <div class="buttons">
+
+                        ${
+                            paper.file_path
+
+                            ?
+
+                            `
+
+                            <a
+                                href="${API_URL}/question-papers/${paper.id}/view?user_type=${USER_TYPE}"
+                                target="_blank"
+                                class="view-btn"
+                            >
+                                👁️ View PDF
+                            </a>
+
+
+                            <a
+                                href="${API_URL}/question-papers/${paper.id}/download?user_type=${USER_TYPE}"
+                                class="download-btn"
+                            >
+                                ⬇️ Download
+                            </a>
+
+
+                            ${
+                                canManage
+                                ?
+                                `
+                                <button
+                                    class="edit-btn"
+                                    onclick='editPaper(${JSON.stringify(paper)})'
+                                >
+                                    ✏️ Edit / Change Date & Time
+                                </button>
+                                `
+                                :
+                                `
+                                <span style="padding:8px 10px; color:#777; font-weight:bold;">🔒 Editing disabled after exam</span>
+                                `
+                            }
+
+                            ${
+                                canDelete
+                                ?
+                                `
+                                <button
+                                    class="delete-btn"
+                                    onclick="deletePaper(${paper.id})"
+                                >
+                                    🗑️ Delete
+                                </button>
+                                `
+                                : ""
+                            }
+
+                            `
+
+                            :
+
+                            `
+
+                            ${
+                                canManage
+                                ?
+                                `
+                                <button
+                                    class="edit-btn"
+                                    onclick='editPaper(${JSON.stringify(paper)})'
+                                >
+                                    ✏️ Edit
+                                </button>
+                                `
+                                : ""
+                            }
+
+                            ${
+                                canDelete
+                                ?
+                                `
+                                <button
+                                    class="delete-btn"
+                                    onclick="deletePaper(${paper.id})"
+                                >
+                                    🗑️ Delete
+                                </button>
+                                `
+                                : ""
+                            }
+
+
+                            <span
+                                style="color:#999; margin-left:8px;"
+                            >
+                                PDF not available
+                            </span>
+
+                            `
+                        }
+
+                    </div>
+
+
+                    <!-- EDIT FORM -->
+
+                    <div
+                        id="editBox-${paper.id}"
+                        class="edit-box"
+                    >
+
+                        <h3>
+                            ✏️ Edit Question Paper
+                        </h3>
+
+
+                        <form
+                            onsubmit="updatePaper(event, ${paper.id})"
+                        >
+
+                            <div class="form-grid">
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Department
+                                    </label>
+
+
+                                    <input
+                                        type="text"
+                                        id="department-${paper.id}"
+                                        value="${paper.department || ''}"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Level
+                                    </label>
+
+
+                                    <select
+                                        id="level-${paper.id}"
+                                        required
+                                    >
+
+                                        <option
+                                            value="UG"
+                                            ${paper.level === "UG" ? "selected" : ""}
+                                        >
+                                            UG
+                                        </option>
+
+
+                                        <option
+                                            value="PG"
+                                            ${paper.level === "PG" ? "selected" : ""}
+                                        >
+                                            PG
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Semester
+                                    </label>
+
+
+                                    <input
+                                        type="number"
+                                        id="semester-${paper.id}"
+                                        value="${paper.semester || ''}"
+                                        min="1"
+                                        max="10"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Subject
+                                    </label>
+
+
+                                    <input
+                                        type="text"
+                                        id="subject-${paper.id}"
+                                        value="${paper.subject || ''}"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Paper Type
+                                    </label>
+
+
+                                    <select
+                                        id="paperType-${paper.id}"
+                                        required
+                                    >
+
+                                        <option value="Internal 1" ${paper.paper_type === "Internal 1" ? "selected" : ""}>Internal 1</option>
+                                        <option value="Internal 2" ${paper.paper_type === "Internal 2" ? "selected" : ""}>Internal 2</option>
+                                        <option value="Internal 3" ${paper.paper_type === "Internal 3" ? "selected" : ""}>Internal 3</option>
+
+
+                                        <option
+                                            value="Model"
+                                            ${paper.paper_type === "Model" ? "selected" : ""}
+                                        >
+                                            Model
+                                        </option>
+
+
+                                        <option
+                                            value="University"
+                                            ${paper.paper_type === "University" ? "selected" : ""}
+                                        >
+                                            University
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Year
+                                    </label>
+
+
+                                    <input
+                                        type="number"
+                                        id="year-${paper.id}"
+                                        value="${paper.year || ''}"
+                                        min="2000"
+                                        max="2100"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Exam Date & Time
+                                    </label>
+
+
+                                    <input
+                                        type="datetime-local"
+                                        id="examDate-${paper.id}"
+                                        value="${toDateTimeLocal(paper.exam_date)}"
+                                    >
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Replace File (Optional)
+                                    </label>
+
+
+                                    <input
+                                        type="file"
+                                        id="file-${paper.id}"
+                                        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="edit-actions">
+
+                                <button
+                                    type="submit"
+                                    class="save-btn"
+                                >
+                                    💾 Save Changes
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="cancel-btn"
+                                    onclick="cancelEdit(${paper.id})"
+                                >
+                                    Cancel
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                `;
+
+
+                papersList.appendChild(
+                    paperDiv
+                );
+
+            });
+
+    } catch (error) {
+
+        console.error(error);
+
+        papersList.innerHTML =
+            '<div class="message">Cannot connect to server.</div>';
+    }
+}
+
+
+/* ==========================================
+   OPEN EDIT FORM
+========================================== */
+
+function editPaper(paper) {
+
+    const editBox =
+        document.getElementById(
+            `editBox-${paper.id}`
+        );
+
+
+    if (!editBox) {
+        return;
+    }
+
+
+    editBox.style.display =
+        "block";
+
+
+    editBox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+
+/* ==========================================
+   CANCEL EDIT
+========================================== */
+
+function cancelEdit(paperId) {
+
+    const editBox =
+        document.getElementById(
+            `editBox-${paperId}`
+        );
+
+
+    if (editBox) {
+
+        editBox.style.display =
+            "none";
+    }
+}
+
+
+/* ==========================================
+   DATE FORMAT
+========================================== */
+
+function toDateTimeLocal(dateValue) {
+
+    if (!dateValue) {
+        return "";
+    }
+
+
+    const date =
+        new Date(dateValue);
+
+
+    if (isNaN(date.getTime())) {
+        return "";
+    }
+
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+
+    const hours =
+        String(
+            date.getHours()
+        ).padStart(2, "0");
+
+
+    const minutes =
+        String(
+            date.getMinutes()
+        ).padStart(2, "0");
+
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+
+/* ==========================================
+   UPDATE QUESTION PAPER
+========================================== */
+
+async function updatePaper(
+    event,
+    paperId
+) {
+
+    event.preventDefault();
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "department",
+        document.getElementById(
+            `department-${paperId}`
+        ).value
+    );
+
+
+    formData.append(
+        "level",
+        document.getElementById(
+            `level-${paperId}`
+        ).value
+    );
+
+
+    formData.append(
+        "semester",
+        document.getElementById(
+            `semester-${paperId}`
+        ).value
+    );
+
+
+    formData.append(
+        "subject",
+        document.getElementById(
+            `subject-${paperId}`
+        ).value
+    );
+
+
+    formData.append(
+        "paper_type",
+        document.getElementById(
+            `paperType-${paperId}`
+        ).value
+    );
+
+
+    formData.append(
+        "year",
+        document.getElementById(
+            `year-${paperId}`
+        ).value
+    );
+
+
+    const examDate =
+        document.getElementById(
+            `examDate-${paperId}`
+        ).value;
+
+
+    if (examDate) {
+
+        formData.append(
+            "exam_date",
+            examDate
+        );
+    }
+
+    formData.append(
+        "user_type",
+        USER_TYPE
+    );
+
+
+    const fileInput =
+        document.getElementById(
+            `file-${paperId}`
+        );
+
+
+    if (
+        fileInput.files.length > 0
+    ) {
+
+        formData.append(
+            "file",
+            fileInput.files[0]
+        );
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/question-papers/${paperId}?user_type=${USER_TYPE}`,
+                {
+                    method: "PUT",
+                    body: formData
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            alert(
+                "Question paper updated successfully!"
+            );
+
+
+            loadPapers();
+
+        } else {
+
+            alert(
+                data.detail ||
+                "Failed to update question paper."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Cannot connect to server."
+        );
+    }
+}
+
+
+/* ==========================================
+   DELETE QUESTION PAPER
+========================================== */
+
+async function deletePaper(
+    paperId
+) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this question paper?"
+        );
+
+
+    if (!confirmDelete) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/question-papers/${paperId}?user_type=${USER_TYPE}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (response.ok) {
+
+            alert(
+                "Question paper deleted successfully!"
+            );
+
+
+            loadPapers();
+
+        } else {
+
+            alert(
+                data.detail ||
+                "Failed to delete question paper."
+            );
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Cannot connect to server."
+        );
+    }
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+function logout() {
+
+    window.location.href =
+        "login.html";
+}
+
+
+/* ==========================================
+   LOAD DATA
+========================================== */
+
+loadDepartments();
+loadUsers();
+loadPapers();
+
+</script>
+
+</body>
+</html>

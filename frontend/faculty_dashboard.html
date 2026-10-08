@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Faculty Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #243b6b;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #243b6b;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 35px auto;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #243b6b;
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #243b6b;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #243b6b;
+        }
+
+        .upload-btn,
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: #243b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover,
+        .save-btn:hover {
+            background: #1b2e55;
+        }
+
+        .cancel-btn {
+            width: 100%;
+            padding: 14px;
+            background: #e5e7eb;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #message,
+        #editMessage,
+        #syllabusMessage {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success {
+            background: #dff5e3;
+            color: #207a35;
+        }
+
+        .error {
+            background: #ffe0e0;
+            color: #b00020;
+        }
+
+        .paper-card,
+        .syllabus-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafbff;
+        }
+
+        .paper-card h3,
+        .syllabus-card h3 {
+            color: #243b6b;
+            margin-bottom: 12px;
+        }
+
+        .paper-info {
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .upcoming-badge {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .completed-badge {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #e2e3e5;
+            color: #555;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .view-btn,
+        .download-btn,
+        .edit-btn,
+        .delete-btn {
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            font-weight: bold;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .view-btn {
+            background: #e7eefc;
+            color: #243b6b;
+        }
+
+        .download-btn {
+            background: #243b6b;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .delete-btn {
+            background: #ffe0e0;
+            color: #b00020;
+        }
+
+        #papersMessage,
+        #syllabusListMessage {
+            color: #666;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .edit-card {
+            border: 2px solid #243b6b;
+        }
+
+        .edit-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .edit-id {
+            background: #e7eefc;
+            color: #243b6b;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .format-section {
+            border-top: 4px solid #243b6b;
+        }
+
+        .format-editor {
+            background: #f8f9ff;
+            border: 1px solid #d9def0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .format-content {
+            width: 100%;
+            min-height: 180px;
+            resize: vertical;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            font-family: Arial, sans-serif;
+        }
+
+        .format-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #fafbff;
+        }
+
+        .format-card h3 {
+            color: #243b6b;
+            margin-bottom: 8px;
+        }
+
+        .format-card pre {
+            white-space: pre-wrap;
+            margin-top: 12px;
+            padding: 14px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            line-height: 1.6;
+            font-family: Arial, sans-serif;
+        }
+
+        .syllabus-section {
+            border-top: 4px solid #243b6b;
+        }
+
+        .section-note {
+            color: #666;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .syllabus-info {
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .syllabus-title {
+            color: #243b6b;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        /* Guide-approved modern UI */
+        .format-section { border:1px solid #e5e7eb; border-radius:22px; background:linear-gradient(145deg,#ffffff,#f8faff); box-shadow:0 16px 40px rgba(31,41,55,.08); }
+        .format-header { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:22px; }
+        .format-header > div { display:flex; gap:14px; align-items:flex-start; }
+        .format-icon { width:48px; height:48px; border-radius:14px; display:grid; place-items:center; background:#eef2ff; font-size:24px; }
+        .faculty-badge { background:#ede9fe; color:#5b21b6; padding:8px 12px; border-radius:999px; font-size:11px; font-weight:800; letter-spacing:.6px; }
+        .format-upload-box { padding:20px; border:1px dashed #a5b4fc; border-radius:18px; background:#fafbff; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .format-file-group { grid-column:1/-1; }
+        .format-actions { grid-column:1/-1; display:flex; gap:10px; }
+        .format-upload-box input[type=file] { width:100%; box-sizing:border-box; background:#fff; border:1px dashed #94a3b8; border-radius:12px; padding:12px; }
+        .format-upload-box small { display:block; margin-top:6px; color:#64748b; }
+        .saved-format-area { margin-top:28px; }
+        .saved-format-area h3 { color:#243b6b; margin-bottom:14px; }
+        .format-card { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px; margin:10px 0; border:1px solid #e2e8f0; border-radius:16px; background:#fff; box-shadow:0 7px 18px rgba(15,23,42,.05); }
+        .format-card-info { display:flex; align-items:center; gap:13px; min-width:0; }
+        .format-card-info h4 { margin:0 0 5px; color:#1e293b; }
+        .format-card-info p { margin:0; color:#64748b; font-size:13px; overflow-wrap:anywhere; }
+        .format-tag { min-width:44px; text-align:center; padding:8px 10px; border-radius:10px; background:#eef2ff; color:#4338ca; font-weight:800; }
+        .format-card-actions { display:flex; gap:7px; flex-wrap:wrap; justify-content:flex-end; }
+        .empty-format { padding:20px; text-align:center; color:#64748b; background:#f8fafc; border-radius:14px; }
+        @media(max-width:700px){ .format-upload-box{grid-template-columns:1fr;} .format-file-group,.format-actions{grid-column:auto;} .format-header,.format-card{flex-direction:column; align-items:flex-start;} .format-card-actions{justify-content:flex-start;} }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        Question Paper Management System
+    </h1>
+
+    <button
+        class="logout-btn"
+        onclick="logout()"
+    >
+        Logout
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h2>
+            Faculty Dashboard
+        </h2>
+
+        <p>
+            Upload and manage question papers and syllabus.
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         UPLOAD QUESTION PAPER
+    =========================================== -->
+
+    <div class="card">
+
+        <h2>
+            Upload Question Paper
+        </h2>
+
+        <form id="uploadForm">
+
+            <div class="form-group">
+
+                <label>
+                    Faculty Name
+                </label>
+
+                <input
+                    type="text"
+                    id="facultyName"
+                    placeholder="Enter faculty name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Department
+                </label>
+
+                <select id="department" required>
+
+                    <option value="">
+                        Loading departments...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Level
+                </label>
+
+                <select id="level" required>
+
+                    <option value="">
+                        Select Level
+                    </option>
+
+                    <option value="UG">
+                        UG
+                    </option>
+
+                    <option value="PG">
+                        PG
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Semester
+                </label>
+
+                <select id="semester" required>
+
+                    <option value="">
+                        Select Semester
+                    </option>
+
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="subject"
+                    placeholder="Enter subject name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Paper Type
+                </label>
+
+                <select id="paper_type" required>
+
+                    <option value="">
+                        Select Paper Type
+                    </option>
+
+                    <option value="Internal 1">
+                        Internal 1
+                    </option>
+
+                    <option value="Internal 2">
+                        Internal 2
+                    </option>
+
+                    <option value="Internal 3">
+                        Internal 3
+                    </option>
+
+                    <option value="Model">
+                        Model
+                    </option>
+
+                    <option value="University">
+                        University
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Year
+                </label>
+
+                <input
+                    type="number"
+                    id="year"
+                    min="2020"
+                    max="2030"
+                    placeholder="Enter year"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Exam Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="examDate"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Select Question Paper File
+                </label>
+
+                <input
+                    type="file"
+                    id="file"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="upload-btn"
+            >
+                Upload Question Paper
+            </button>
+
+        </form>
+
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EDIT QUESTION PAPER
+    =========================================== -->
+
+    <div
+        class="card edit-card"
+        id="editCard"
+        style="display:none;"
+    >
+
+        <div class="edit-title">
+
+            <h2>
+                Edit Question Paper
+            </h2>
+
+            <span
+                class="edit-id"
+                id="editPaperId"
+            >
+                Paper ID
+            </span>
+
+        </div>
+
+
+        <form id="editForm">
+
+            <div class="form-group">
+
+                <label>
+                    Department
+                </label>
+
+                <select id="editDepartment" required>
+
+                    <option value="">
+                        Loading departments...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Level
+                </label>
+
+                <select id="editLevel" required>
+
+                    <option value="UG">
+                        UG
+                    </option>
+
+                    <option value="PG">
+                        PG
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Semester
+                </label>
+
+                <select id="editSemester" required>
+
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="editSubject"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Paper Type
+                </label>
+
+                <select id="editPaperType" required>
+
+                    <option value="Internal 1">
+                        Internal 1
+                    </option>
+
+                    <option value="Internal 2">
+                        Internal 2
+                    </option>
+
+                    <option value="Internal 3">
+                        Internal 3
+                    </option>
+
+                    <option value="Model">
+                        Model
+                    </option>
+
+                    <option value="University">
+                        University
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Year
+                </label>
+
+                <input
+                    type="number"
+                    id="editYear"
+                    min="2020"
+                    max="2030"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Exam Date & Time
+                </label>
+
+                <input
+                    type="datetime-local"
+                    id="editExamDate"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Replace File (Optional)
+                </label>
+
+                <input
+                    type="file"
+                    id="editFile"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                >
+
+                <small
+                    style="
+                        display:block;
+                        margin-top:7px;
+                        color:#666;
+                    "
+                >
+                    Leave empty to keep the existing PDF.
+                </small>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                💾 Save Changes
+            </button>
+
+
+            <button
+                type="button"
+                class="cancel-btn"
+                onclick="cancelEdit()"
+            >
+                Cancel
+            </button>
+
+        </form>
+
+
+        <div id="editMessage"></div>
+
+    </div>
+
+
+    <!-- ==========================================
+         UPLOADED QUESTION PAPERS
+    =========================================== -->
+
+    <div class="card">
+
+        <h2>
+            Uploaded Question Papers
+        </h2>
+
+        <div id="papersList">
+
+            <p id="papersMessage">
+                Loading question papers...
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         QUESTION PAPER FORMAT - FACULTY ONLY
+    =========================================== -->
+
+    <div class="card format-section">
+        <div class="format-header">
+            <div>
+                <span class="format-icon">📄</span>
+                <div>
+                    <h2>Question Paper Format</h2>
+                    <p class="section-note">Upload the question paper format as a Word or PDF file. Only Faculty can manage these formats.</p>
+                </div>
+            </div>
+            <span class="faculty-badge">FACULTY ONLY</span>
+        </div>
+
+        <form id="formatForm" class="format-upload-box">
+            <div class="form-group">
+                <label>Level</label>
+                <select id="formatLevel" required>
+                    <option value="">Select Level</option>
+                    <option value="UG">UG</option>
+                    <option value="PG">PG</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Format Type</label>
+                <select id="formatType" required>
+                    <option value="">Select Format</option>
+                    <option value="Internal">Internal</option>
+                    <option value="Model">Model</option>
+                    <option value="University">University</option>
+                </select>
+            </div>
+            <div class="form-group format-file-group">
+                <label>Format File</label>
+                <input type="file" id="formatFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                <small>Allowed: PDF, DOC, DOCX</small>
+            </div>
+            <div class="format-actions">
+                <button type="submit" class="save-btn" id="formatSaveBtn">📤 Upload Format</button>
+                <button type="button" class="cancel-btn" id="formatCancelBtn" style="display:none;" onclick="cancelFormatEdit()">Cancel Edit</button>
+            </div>
+            <div id="formatMessage"></div>
+        </form>
+
+        <div class="saved-format-area">
+            <h3>Saved Question Paper Formats</h3>
+            <div id="formatsList"><p id="formatsMessage">Loading formats...</p></div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         UPLOAD SYLLABUS
+    =========================================== -->
+
+    <div class="card syllabus-section">
+
+        <h2>
+            📚 Upload Syllabus
+        </h2>
+
+        <p class="section-note">
+            Upload the syllabus PDF for a specific department,
+            level, semester and subject.
+        </p>
+
+
+        <form id="syllabusForm">
+
+            <div class="form-group">
+
+                <label>
+                    Department
+                </label>
+
+                <select id="syllabusDepartment" required>
+
+                    <option value="">
+                        Loading departments...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Level
+                </label>
+
+                <select id="syllabusLevel" required>
+
+                    <option value="">
+                        Select Level
+                    </option>
+
+                    <option value="UG">
+                        UG
+                    </option>
+
+                    <option value="PG">
+                        PG
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Semester
+                </label>
+
+                <select id="syllabusSemester" required>
+
+                    <option value="">
+                        Select Semester
+                    </option>
+
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="syllabusSubject"
+                    placeholder="Enter subject name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Year
+                </label>
+
+                <input
+                    type="number"
+                    id="syllabusYear"
+                    min="2020"
+                    max="2030"
+                    placeholder="Enter year"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Select Syllabus File
+                </label>
+
+                <input
+                    type="file"
+                    id="syllabusFile"
+                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="upload-btn"
+            >
+                📚 Upload Syllabus
+            </button>
+
+        </form>
+
+
+        <div id="syllabusMessage"></div>
+
+    </div>
+
+
+    <!-- ==========================================
+         UPLOADED SYLLABUS
+    =========================================== -->
+
+    <div class="card">
+
+        <h2>
+            📖 Uploaded Syllabus
+        </h2>
+
+        <div id="syllabusList">
+
+            <p id="syllabusListMessage">
+                Loading syllabus...
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API_URL =
+    "http://127.0.0.1:8000";
+
+const USER_TYPE = "faculty";
+
+
+/* =================================================
+   LOAD DEPARTMENTS FROM ADMIN
+================================================= */
+
+async function loadDepartments() {
+
+    const departmentSelect =
+        document.getElementById("department");
+
+    const editDepartmentSelect =
+        document.getElementById("editDepartment");
+
+    const syllabusDepartmentSelect =
+        document.getElementById("syllabusDepartment");
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/departments`
+            );
+
+
+        const departments =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                departments.detail ||
+                "Failed to load departments."
+            );
+
+        }
+
+
+        const defaultOption = `
+            <option value="">
+                Select Department
+            </option>
+        `;
+
+
+        const options =
+            departments.map(
+                department => `
+                    <option value="${department.name}">
+                        ${department.name}
+                    </option>
+                `
+            ).join("");
+
+
+        if (departmentSelect) {
+
+            departmentSelect.innerHTML =
+                defaultOption + options;
+
+        }
+
+
+        if (editDepartmentSelect) {
+
+            editDepartmentSelect.innerHTML =
+                defaultOption + options;
+
+        }
+
+
+        if (syllabusDepartmentSelect) {
+
+            syllabusDepartmentSelect.innerHTML =
+                defaultOption + options;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Department loading error:",
+            error
+        );
+
+
+        const errorOption = `
+            <option value="">
+                Unable to load departments
+            </option>
+        `;
+
+
+        if (departmentSelect) {
+
+            departmentSelect.innerHTML =
+                errorOption;
+
+        }
+
+
+        if (editDepartmentSelect) {
+
+            editDepartmentSelect.innerHTML =
+                errorOption;
+
+        }
+
+
+        if (syllabusDepartmentSelect) {
+
+            syllabusDepartmentSelect.innerHTML =
+                errorOption;
+
+        }
+
+    }
+
+}
+
+
+/* =================================================
+   COMMON ERROR
+================================================= */
+
+function showError(message) {
+
+    const messageBox =
+        document.getElementById("message");
+
+
+    messageBox.style.display =
+        "block";
+
+    messageBox.className =
+        "error";
+
+
+    if (Array.isArray(message)) {
+
+        messageBox.textContent =
+            message.map(item => {
+
+                if (
+                    typeof item === "object" &&
+                    item !== null
+                ) {
+
+                    return item.msg ||
+                           JSON.stringify(item);
+
+                }
+
+                return String(item);
+
+            }).join(" | ");
+
+        return;
+
+    }
+
+
+    if (
+        typeof message === "object" &&
+        message !== null
+    ) {
+
+        messageBox.textContent =
+            message.msg ||
+            message.message ||
+            JSON.stringify(message);
+
+        return;
+
+    }
+
+
+    messageBox.textContent =
+        String(
+            message ||
+            "Upload failed."
+        );
+
+}
+
+
+/* =================================================
+   QUESTION PAPER UPLOAD
+================================================= */
+
+document.getElementById(
+    "uploadForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const department =
+            document.getElementById(
+                "department"
+            ).value;
+
+
+        const level =
+            document.getElementById(
+                "level"
+            ).value;
+
+
+        const semester =
+            document.getElementById(
+                "semester"
+            ).value;
+
+
+        const subject =
+            document.getElementById(
+                "subject"
+            ).value;
+
+
+        const paper_type =
+            document.getElementById(
+                "paper_type"
+            ).value;
+
+
+        const year =
+            document.getElementById(
+                "year"
+            ).value;
+
+
+        const examDate =
+            document.getElementById(
+                "examDate"
+            ).value;
+
+
+        const file =
+            document.getElementById(
+                "file"
+            ).files[0];
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (!file) {
+
+            showError(
+                "Please select a PDF, DOC or DOCX file."
+            );
+
+            return;
+
+        }
+
+
+        if (!/\.(pdf|doc|docx)$/i.test(file.name)) {
+
+            showError(
+                "Only PDF, DOC or DOCX files are allowed."
+            );
+
+            return;
+
+        }
+
+
+        if (!examDate) {
+
+            showError(
+                "Please select the exam date and time."
+            );
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "faculty_name",
+            document.getElementById("facultyName").value.trim()
+        );
+
+        formData.append(
+            "department",
+            department
+        );
+
+        formData.append(
+            "level",
+            level
+        );
+
+        formData.append(
+            "semester",
+            semester
+        );
+
+        formData.append(
+            "subject",
+            subject
+        );
+
+        formData.append(
+            "paper_type",
+            paper_type
+        );
+
+        formData.append(
+            "year",
+            year
+        );
+
+        formData.append(
+            "exam_date",
+            examDate
+        );
+
+        formData.append(
+            "user_type",
+            USER_TYPE
+        );
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/upload-question-paper`,
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (response.ok) {
+
+                message.style.display =
+                    "block";
+
+                message.className =
+                    "success";
+
+                message.textContent =
+                    "Question paper uploaded successfully! Paper ID: "
+                    + data.paper_id;
+
+
+                document
+                    .getElementById(
+                        "uploadForm"
+                    )
+                    .reset();
+
+
+                loadPapers();
+
+            }
+
+            else {
+
+                showError(
+                    data.detail ||
+                    data.message ||
+                    "Upload failed."
+                );
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            showError(
+                "Cannot connect to the server. Please check FastAPI."
+            );
+
+        }
+
+    }
+);
+
+
+/* =================================================
+   FORMAT DATE
+================================================= */
+
+function formatExamDate(dateValue) {
+
+    if (!dateValue) {
+
+        return "Not specified";
+
+    }
+
+
+    const date =
+        new Date(dateValue);
+
+
+    if (isNaN(date.getTime())) {
+
+        return String(dateValue);
+
+    }
+
+
+    return date.toLocaleString();
+
+}
+
+
+/* =================================================
+   FORMAT UPLOAD DATE
+================================================= */
+
+function formatUploadDate(dateValue) {
+
+    if (!dateValue) {
+
+        return "Not specified";
+
+    }
+
+
+    const date =
+        new Date(dateValue);
+
+
+    if (isNaN(date.getTime())) {
+
+        return String(dateValue);
+
+    }
+
+
+    return date.toLocaleString();
+
+}
+
+
+/* =================================================
+   DATETIME LOCAL FORMAT
+================================================= */
+
+function toDateTimeLocal(dateValue) {
+
+    if (!dateValue) {
+
+        return "";
+
+    }
+
+
+    const date =
+        new Date(dateValue);
+
+
+    if (isNaN(date.getTime())) {
+
+        return "";
+
+    }
+
+
+    const year =
+        date.getFullYear();
+
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+
+    const hours =
+        String(
+            date.getHours()
+        ).padStart(2, "0");
+
+
+    const minutes =
+        String(
+            date.getMinutes()
+        ).padStart(2, "0");
+
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+
+}
+
+
+/* =================================================
+   UPCOMING
+================================================= */
+
+function isUpcoming(dateValue) {
+
+    if (!dateValue) {
+
+        return false;
+
+    }
+
+
+    const examDate =
+        new Date(dateValue);
+
+
+    return examDate >
+           new Date();
+
+}
+
+
+/* =================================================
+   LOAD QUESTION PAPERS
+================================================= */
+
+async function loadPapers() {
+
+    const papersList =
+        document.getElementById(
+            "papersList"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/question-papers?user_type=${USER_TYPE}`
+            );
+
+
+        const papers =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            showPapersError(
+                papers.detail ||
+                "Failed to load question papers."
+            );
+
+            return;
+
+        }
+
+
+        papersList.innerHTML =
+            "";
+
+
+        if (
+            !papers ||
+            papers.length === 0
+        ) {
+
+            papersList.innerHTML = `
+
+                <p id="papersMessage">
+                    No question papers uploaded yet.
+                </p>
+
+            `;
+
+            return;
+
+        }
+
+
+        papers.forEach(
+            paper => {
+
+                const paperCard =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                paperCard.className =
+                    "paper-card";
+
+
+                const upcoming =
+                    isUpcoming(
+                        paper.exam_date
+                    );
+
+                const canManage =
+                    !paper.exam_date ||
+                    new Date(paper.exam_date) > new Date();
+
+                // Faculty can delete any paper, even after the exam.
+                const canDelete = true;
+
+
+                const statusBadge =
+                    upcoming
+                    ?
+                    `
+                    <span class="upcoming-badge">
+                        🔔 Upcoming Exam
+                    </span>
+                    `
+                    :
+                    `
+                    <span class="completed-badge">
+                        ✓ Exam completed — View & Download only
+                    </span>
+                    `;
+
+
+                paperCard.innerHTML = `
+
+                    ${statusBadge}
+
+                    <h3>
+                        ${paper.subject}
+                    </h3>
+
+                    <div class="paper-info">
+
+                        <p>
+                            <strong>Paper ID:</strong>
+                            ${paper.id}
+                        </p>
+
+                        <p>
+                            <strong>Uploaded by:</strong>
+                            ${paper.faculty_name || "Not specified"}
+                        </p>
+
+                        <p>
+                            <strong>Department:</strong>
+                            ${paper.department}
+                        </p>
+
+                        <p>
+                            <strong>Level:</strong>
+                            ${paper.level}
+                        </p>
+
+                        <p>
+                            <strong>Semester:</strong>
+                            ${paper.semester}
+                        </p>
+
+                        <p>
+                            <strong>Paper Type:</strong>
+                            ${paper.paper_type}
+                        </p>
+
+                        <p>
+                            <strong>Year:</strong>
+                            ${paper.year}
+                        </p>
+
+                        <p>
+                            <strong>Exam Date:</strong>
+                            ${formatExamDate(
+                                paper.exam_date
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>File:</strong>
+                            ${
+                                paper.file_name ||
+                                "Not available"
+                            }
+                        </p>
+
+                    </div>
+
+
+                    <div class="action-buttons">
+
+                        ${
+                            paper.file_path
+                            ?
+                            `
+
+                            <a
+                                href="${API_URL}/question-papers/${paper.id}/view?user_type=${USER_TYPE}"
+                                target="_blank"
+                                class="view-btn"
+                            >
+                                👁️ View PDF
+                            </a>
+
+
+                            <a
+                                href="${API_URL}/question-papers/${paper.id}/download?user_type=${USER_TYPE}"
+                                class="download-btn"
+                            >
+                                ⬇️ Download PDF
+                            </a>
+
+                            `
+                            :
+                            ""
+                        }
+
+
+                        ${
+                            canManage
+                            ?
+                            `
+                            <button
+                                class="edit-btn"
+                                onclick='editPaper(${JSON.stringify(paper)})'
+                            >
+                                ✏️ Edit / Change Date & Time
+                            </button>
+                            `
+                            :
+                            `
+                            <span style="padding:10px 12px; color:#777; font-weight:bold;">🔒 Editing disabled after exam</span>
+                            `
+                        }
+
+                        ${
+                            canDelete
+                            ?
+                            `
+                            <button
+                                class="delete-btn"
+                                onclick="deletePaper(${paper.id})"
+                            >
+                                🗑️ Delete
+                            </button>
+                            `
+                            : ""
+                        }
+
+                    </div>
+
+
+                    ${
+                        paper.file_path
+                        ?
+                        ""
+                        :
+                        `
+                        <p
+                            style="
+                                margin-top:15px;
+                                color:#b00020;
+                            "
+                        >
+                            PDF file not available.
+                        </p>
+                        `
+                    }
+
+                `;
+
+
+                papersList.appendChild(
+                    paperCard
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        papersList.innerHTML = `
+
+            <p id="papersMessage">
+                Cannot load question papers.
+                Please check FastAPI.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+/* =================================================
+   PAPER LOAD ERROR
+================================================= */
+
+function showPapersError(error) {
+
+    const papersList =
+        document.getElementById(
+            "papersList"
+        );
+
+
+    let message;
+
+
+    if (
+        typeof error === "object" &&
+        error !== null
+    ) {
+
+        message =
+            error.msg ||
+            error.message ||
+            JSON.stringify(error);
+
+    }
+
+    else {
+
+        message =
+            String(error);
+
+    }
+
+
+    papersList.innerHTML = `
+
+        <p
+            id="papersMessage"
+            style="color:#b00020;"
+        >
+            ${message}
+        </p>
+
+    `;
+
+}
+
+
+/* =================================================
+   EDIT QUESTION PAPER
+================================================= */
+
+function editPaper(paper) {
+
+    document.getElementById(
+        "editCard"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "editPaperId"
+    ).textContent =
+        "Paper ID: " + paper.id;
+
+
+    document.getElementById(
+        "editDepartment"
+    ).value =
+        paper.department || "";
+
+
+    document.getElementById(
+        "editLevel"
+    ).value =
+        paper.level || "";
+
+
+    document.getElementById(
+        "editSemester"
+    ).value =
+        String(
+            paper.semester || ""
+        );
+
+
+    document.getElementById(
+        "editSubject"
+    ).value =
+        paper.subject || "";
+
+
+    document.getElementById(
+        "editPaperType"
+    ).value =
+        paper.paper_type || "";
+
+
+    document.getElementById(
+        "editYear"
+    ).value =
+        paper.year || "";
+
+
+    document.getElementById(
+        "editExamDate"
+    ).value =
+        toDateTimeLocal(
+            paper.exam_date
+        );
+
+
+    document.getElementById(
+        "editFile"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "editMessage"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "editCard"
+    ).scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+
+/* =================================================
+   CANCEL EDIT
+================================================= */
+
+function cancelEdit() {
+
+    document.getElementById(
+        "editCard"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "editForm"
+    ).reset();
+
+
+    document.getElementById(
+        "editMessage"
+    ).style.display =
+        "none";
+
+}
+
+
+/* =================================================
+   SAVE EDIT
+================================================= */
+
+document.getElementById(
+    "editForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const paperIdText =
+            document.getElementById(
+                "editPaperId"
+            ).textContent;
+
+
+        const paperId =
+            paperIdText
+                .replace(
+                    "Paper ID:",
+                    ""
+                )
+                .trim();
+
+
+        const department =
+            document.getElementById(
+                "editDepartment"
+            ).value;
+
+
+        const level =
+            document.getElementById(
+                "editLevel"
+            ).value;
+
+
+        const semester =
+            document.getElementById(
+                "editSemester"
+            ).value;
+
+
+        const subject =
+            document.getElementById(
+                "editSubject"
+            ).value;
+
+
+        const paperType =
+            document.getElementById(
+                "editPaperType"
+            ).value;
+
+
+        const year =
+            document.getElementById(
+                "editYear"
+            ).value;
+
+
+        const examDate =
+            document.getElementById(
+                "editExamDate"
+            ).value;
+
+
+        const newFile =
+            document.getElementById(
+                "editFile"
+            ).files[0];
+
+
+        const editMessage =
+            document.getElementById(
+                "editMessage"
+            );
+
+
+        if (!examDate) {
+
+            editMessage.style.display =
+                "block";
+
+            editMessage.className =
+                "error";
+
+            editMessage.textContent =
+                "Please select the exam date and time.";
+
+            return;
+
+        }
+
+
+        if (newFile && !/\.(pdf|doc|docx)$/i.test(newFile.name)) {
+
+            editMessage.style.display =
+                "block";
+
+            editMessage.className =
+                "error";
+
+            editMessage.textContent =
+                "Only PDF, DOC or DOCX files are allowed.";
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "department",
+            department
+        );
+
+        formData.append(
+            "level",
+            level
+        );
+
+        formData.append(
+            "semester",
+            semester
+        );
+
+        formData.append(
+            "subject",
+            subject
+        );
+
+        formData.append(
+            "paper_type",
+            paperType
+        );
+
+        formData.append(
+            "year",
+            year
+        );
+
+        formData.append(
+            "exam_date",
+            examDate
+        );
+
+        formData.append(
+            "user_type",
+            USER_TYPE
+        );
+
+
+        if (newFile) {
+
+            formData.append(
+                "file",
+                newFile
+            );
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/question-papers/${paperId}?user_type=${USER_TYPE}`,
+                    {
+                        method: "PUT",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                editMessage.style.display =
+                    "block";
+
+                editMessage.className =
+                    "error";
+
+                editMessage.textContent =
+                    data.detail ||
+                    data.message ||
+                    "Failed to update question paper.";
+
+                return;
+
+            }
+
+
+            editMessage.style.display =
+                "block";
+
+            editMessage.className =
+                "success";
+
+            editMessage.textContent =
+                "Question paper updated successfully!";
+
+
+            loadPapers();
+
+
+            setTimeout(
+                function() {
+
+                    cancelEdit();
+
+                },
+                1000
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            editMessage.style.display =
+                "block";
+
+            editMessage.className =
+                "error";
+
+            editMessage.textContent =
+                "Cannot connect to the server. Please check FastAPI.";
+
+        }
+
+    }
+);
+
+
+/* =================================================
+   DELETE QUESTION PAPER
+================================================= */
+
+async function deletePaper(paperId) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this question paper?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/question-papers/${paperId}?user_type=${USER_TYPE}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            showError(
+                data.detail ||
+                "Failed to delete question paper."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Question paper deleted successfully!"
+        );
+
+
+        loadPapers();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        showError(
+            "Cannot connect to the server."
+        );
+
+    }
+
+}
+
+
+/* =================================================
+   SYLLABUS UPLOAD
+================================================= */
+
+document.getElementById(
+    "syllabusForm"
+).addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const department =
+            document.getElementById(
+                "syllabusDepartment"
+            ).value;
+
+
+        const level =
+            document.getElementById(
+                "syllabusLevel"
+            ).value;
+
+
+        const semester =
+            document.getElementById(
+                "syllabusSemester"
+            ).value;
+
+
+        const subject =
+            document.getElementById(
+                "syllabusSubject"
+            ).value;
+
+
+        const year =
+            document.getElementById(
+                "syllabusYear"
+            ).value;
+
+
+        const file =
+            document.getElementById(
+                "syllabusFile"
+            ).files[0];
+
+
+        const message =
+            document.getElementById(
+                "syllabusMessage"
+            );
+
+
+        if (!file) {
+
+            message.style.display =
+                "block";
+
+            message.className =
+                "error";
+
+            message.textContent =
+                "Please select a syllabus PDF.";
+
+            return;
+
+        }
+
+
+        if (!/\.(pdf|doc|docx)$/i.test(file.name)) {
+
+            message.style.display =
+                "block";
+
+            message.className =
+                "error";
+
+            message.textContent =
+                "Only PDF, DOC or DOCX files are allowed.";
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "department",
+            department
+        );
+
+        formData.append(
+            "level",
+            level
+        );
+
+        formData.append(
+            "semester",
+            semester
+        );
+
+        formData.append(
+            "subject",
+            subject
+        );
+
+        formData.append(
+            "year",
+            year
+        );
+
+        formData.append(
+            "file",
+            file
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/upload-syllabus`,
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                message.style.display =
+                    "block";
+
+                message.className =
+                    "error";
+
+                message.textContent =
+                    data.detail ||
+                    "Syllabus upload failed.";
+
+                return;
+
+            }
+
+
+            message.style.display =
+                "block";
+
+            message.className =
+                "success";
+
+            message.textContent =
+                "Syllabus uploaded successfully! Syllabus ID: "
+                + data.syllabus_id;
+
+
+            document
+                .getElementById(
+                    "syllabusForm"
+                )
+                .reset();
+
+
+            loadSyllabus();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            message.style.display =
+                "block";
+
+            message.className =
+                "error";
+
+            message.textContent =
+                "Cannot connect to the server. Please check FastAPI.";
+
+        }
+
+    }
+);
+
+
+/* =================================================
+   LOAD SYLLABUS
+================================================= */
+
+async function loadSyllabus() {
+
+    const syllabusList =
+        document.getElementById(
+            "syllabusList"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/syllabus`
+            );
+
+
+        const syllabus =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            syllabusList.innerHTML = `
+
+                <p
+                    id="syllabusListMessage"
+                    style="color:#b00020;"
+                >
+                    ${
+                        syllabus.detail ||
+                        "Failed to load syllabus."
+                    }
+                </p>
+
+            `;
+
+            return;
+
+        }
+
+
+        syllabusList.innerHTML =
+            "";
+
+
+        if (
+            !syllabus ||
+            syllabus.length === 0
+        ) {
+
+            syllabusList.innerHTML = `
+
+                <p id="syllabusListMessage">
+                    No syllabus uploaded yet.
+                </p>
+
+            `;
+
+            return;
+
+        }
+
+
+        syllabus.forEach(
+            item => {
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "syllabus-card";
+
+
+                card.innerHTML = `
+
+                    <div class="syllabus-title">
+                        📚 ${item.subject}
+                    </div>
+
+                    <div class="syllabus-info">
+
+                        <p>
+                            <strong>Syllabus ID:</strong>
+                            ${item.id}
+                        </p>
+
+                        <p>
+                            <strong>Department:</strong>
+                            ${item.department}
+                        </p>
+
+                        <p>
+                            <strong>Level:</strong>
+                            ${item.level}
+                        </p>
+
+                        <p>
+                            <strong>Semester:</strong>
+                            ${item.semester}
+                        </p>
+
+                        <p>
+                            <strong>Subject:</strong>
+                            ${item.subject}
+                        </p>
+
+                        <p>
+                            <strong>Year:</strong>
+                            ${item.year}
+                        </p>
+
+                        <p>
+                            <strong>File:</strong>
+                            ${
+                                item.file_name ||
+                                "Not available"
+                            }
+                        </p>
+
+                        <p>
+                            <strong>Uploaded:</strong>
+                            ${
+                                formatUploadDate(
+                                    item.upload_date
+                                )
+                            }
+                        </p>
+
+                    </div>
+
+
+                    <div class="action-buttons">
+
+                        ${
+                            item.file_path
+                            ?
+                            `
+
+                            <a
+                                href="${API_URL}/syllabus/${item.id}/view"
+                                target="_blank"
+                                class="view-btn"
+                            >
+                                👁️ View Syllabus
+                            </a>
+
+
+                            <a
+                                href="${API_URL}/syllabus/${item.id}/download"
+                                class="download-btn"
+                            >
+                                ⬇️ Download Syllabus
+                            </a>
+
+                            `
+                            :
+                            ""
+                        }
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteSyllabus(${item.id})"
+                        >
+                            🗑️ Delete
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                syllabusList.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        syllabusList.innerHTML = `
+
+            <p
+                id="syllabusListMessage"
+                style="color:#b00020;"
+            >
+                Cannot load syllabus.
+                Please check FastAPI.
+            </p>
+
+        `;
+
+    }
+
+}
+
+
+/* =================================================
+   DELETE SYLLABUS
+================================================= */
+
+async function deleteSyllabus(
+    syllabusId
+) {
+
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this syllabus?"
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/syllabus/${syllabusId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                data.detail ||
+                "Failed to delete syllabus."
+            );
+
+            return;
+
+        }
+
+
+        alert(
+            "Syllabus deleted successfully!"
+        );
+
+
+        loadSyllabus();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        alert(
+            "Cannot connect to the server."
+        );
+
+    }
+
+}
+
+
+/* =================================================
+   QUESTION PAPER FORMAT - FACULTY ONLY
+================================================= */
+
+let editingFormatId = null;
+
+function showFormatMessage(text, type) {
+    const box = document.getElementById("formatMessage");
+    box.style.display = "block";
+    box.className = type;
+    box.textContent = text;
+}
+
+async function loadQuestionPaperFormats() {
+    const list = document.getElementById("formatsList");
+    try {
+        const response = await fetch(`${API_URL}/question-paper-formats?user_type=${USER_TYPE}`);
+        const formats = await response.json();
+        if (!response.ok) throw new Error(formats.detail || "Failed to load formats.");
+        if (!formats.length) {
+            list.innerHTML = '<p class="empty-format">No question paper formats uploaded yet.</p>';
+            return;
+        }
+        list.innerHTML = formats.map(item => {
+            const fileName = item.file_name || "Format file";
+            return `
+            <div class="format-card">
+                <div class="format-card-info">
+                    <div class="format-tag">${item.level}</div>
+                    <div>
+                        <h4>${item.format_type} Format</h4>
+                        <p>📎 ${escapeFormatText(fileName)}</p>
+                    </div>
+                </div>
+                <div class="format-card-actions">
+                    ${item.has_file ? `<button class="view-btn" onclick="viewFormat(${item.id})">👁 View</button>
+                    <a class="download-btn" href="${API_URL}/question-paper-formats/${item.id}/download?user_type=${USER_TYPE}" target="_blank">⬇ Download</a>` : ''}
+                    <button class="edit-btn" onclick="editFormat(${item.id})">✏ Edit</button>
+                </div>
+            </div>`;
+        }).join('');
+    } catch (error) {
+        console.error(error);
+        list.innerHTML = '<p class="empty-format">Unable to load formats.</p>';
+    }
+}
+
+function escapeFormatText(value) {
+    return String(value || '').replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+}
+
+async function editFormat(id) {
+    try {
+        const response = await fetch(`${API_URL}/question-paper-formats?user_type=${USER_TYPE}`);
+        const formats = await response.json();
+        const item = formats.find(x => x.id === id);
+        if (!item) return;
+        editingFormatId = id;
+        document.getElementById("formatLevel").value = item.level;
+        document.getElementById("formatType").value = item.format_type;
+        document.getElementById("formatFile").required = false;
+        document.getElementById("formatSaveBtn").textContent = "💾 Save Changes";
+        document.getElementById("formatCancelBtn").style.display = "inline-block";
+        document.getElementById("formatForm").scrollIntoView({behavior:'smooth', block:'center'});
+    } catch (error) {
+        alert("Unable to edit format.");
+    }
+}
+
+function viewFormat(id) {
+    window.open(`${API_URL}/question-paper-formats/${id}/view?user_type=${USER_TYPE}`, "_blank");
+}
+
+function cancelFormatEdit() {
+    editingFormatId = null;
+    document.getElementById("formatForm").reset();
+    document.getElementById("formatFile").required = false;
+    document.getElementById("formatSaveBtn").textContent = "📤 Upload Format";
+    document.getElementById("formatCancelBtn").style.display = "none";
+    document.getElementById("formatMessage").textContent = "";
+}
+
+document.getElementById("formatForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    const level = document.getElementById("formatLevel").value;
+    const formatType = document.getElementById("formatType").value;
+    const file = document.getElementById("formatFile").files[0];
+    if (!level || !formatType) { showFormatMessage("Please select the level and format type.", "error"); return; }
+    if (!editingFormatId && !file) { showFormatMessage("Please select a PDF, DOC or DOCX file.", "error"); return; }
+    const formData = new FormData();
+    formData.append("level", level);
+    formData.append("format_type", formatType);
+    formData.append("user_type", USER_TYPE);
+    if (file) formData.append("file", file);
+    try {
+        const url = editingFormatId ? `${API_URL}/question-paper-formats/${editingFormatId}` : `${API_URL}/question-paper-formats`;
+        const response = await fetch(url, {method: editingFormatId ? "PUT" : "POST", body: formData});
+        const data = await response.json();
+        if (!response.ok) { showFormatMessage(data.detail || "Failed to save format.", "error"); return; }
+        showFormatMessage(data.message || "Format uploaded successfully!", "success");
+        cancelFormatEdit();
+        await loadQuestionPaperFormats();
+    } catch (error) {
+        console.error(error);
+        showFormatMessage("Cannot connect to the server.", "error");
+    }
+});
+
+/* =================================================
+   LOGOUT
+================================================= */
+
+function logout() {
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =================================================
+   INITIAL LOAD
+================================================= */
+
+loadDepartments();
+
+loadPapers();
+
+loadSyllabus();
+loadQuestionPaperFormats();
+
+</script>
+
+</body>
+</html>

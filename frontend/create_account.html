@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Question Paper Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .container {
+            width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Create Account</h1>
+
+    <p class="subtitle">
+        Question Paper Management System
+    </p>
+
+    <form id="registerForm">
+
+        <label for="name">Full Name</label>
+
+        <input
+            type="text"
+            id="name"
+            placeholder="Enter your name"
+            required
+        >
+
+
+        <label for="username">Username</label>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter username"
+            required
+        >
+
+
+        <label for="email">Email</label>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter email"
+            required
+        >
+
+
+        <label for="userType">User Type</label>
+
+        <select id="userType" required>
+
+            <option value="">
+                Select User Type
+            </option>
+
+            <option value="Student">
+                Student
+            </option>
+
+            <option value="Faculty">
+                Faculty
+            </option>
+
+            <option value="Admin">
+                Admin
+            </option>
+
+        </select>
+
+
+        <label for="password">Password</label>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+            required
+        >
+
+
+        <label for="confirmPassword">Confirm Password</label>
+
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm password"
+            required
+        >
+
+
+        <button type="submit">
+            Create Account
+        </button>
+
+    </form>
+
+
+    <div class="message" id="message"></div>
+
+
+    <div class="login-link">
+
+        Already have an account?
+
+        <a href="login.html">
+            Login
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document.getElementById("name").value;
+
+        const username =
+            document.getElementById("username").value;
+
+        const email =
+            document.getElementById("email").value;
+
+        const userType =
+            document.getElementById("userType").value;
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        const message =
+            document.getElementById("message");
+
+
+        /* Check password */
+
+        if (password !== confirmPassword) {
+
+            message.style.color = "red";
+
+            message.textContent =
+                "Passwords do not match.";
+
+            return;
+        }
+
+
+        try {
+
+            const response = await fetch(
+                "/register",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        username: username,
+
+                        email: email,
+
+                        password: password,
+
+                        user_type: userType
+
+                    })
+                }
+            );
+
+
+            const data =
+                await response.json();
+
+
+            if (response.ok) {
+
+                message.style.color = "green";
+
+                message.textContent =
+                    "Account created successfully!";
+
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "login.html";
+
+                }, 1500);
+
+            }
+            else {
+
+                message.style.color = "red";
+
+                message.textContent =
+                    data.detail ||
+                    "Account creation failed.";
+
+            }
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            message.style.color = "red";
+
+            message.textContent =
+                "Cannot connect to server.";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

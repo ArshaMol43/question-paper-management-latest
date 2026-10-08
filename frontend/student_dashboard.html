@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #333;
+        }
+
+        .navbar {
+            background: #667eea;
+            color: white;
+            padding: 18px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 22px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .welcome h1 {
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #777;
+        }
+
+        .filters {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filters h2 {
+            margin-bottom: 20px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background: #5568d9;
+        }
+
+        .syllabus-search-btn {
+            background: #764ba2;
+        }
+
+        .syllabus-search-btn:hover {
+            background: #633d87;
+        }
+
+        .section {
+            margin-top: 25px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .notification {
+            padding: 15px;
+            background: #f0f3ff;
+            border-left: 5px solid #667eea;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .upcoming-notification {
+            padding: 16px;
+            background: #fff8e1;
+            border-left: 5px solid #f0ad00;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .upcoming-title {
+            color: #8a6500;
+            font-weight: bold;
+        }
+
+        .paper-card,
+        .syllabus-card {
+            margin-top: 15px;
+            padding: 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .paper-card h3,
+        .syllabus-card h3 {
+            margin-bottom: 12px;
+            color: #667eea;
+        }
+
+        .syllabus-card h3 {
+            color: #764ba2;
+        }
+
+        .paper-card p,
+        .syllabus-card p {
+            margin-top: 7px;
+        }
+
+        .exam-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            margin-bottom: 12px;
+            border-radius: 20px;
+            background: #fff3cd;
+            color: #856404;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .locked-badge {
+            margin-top: 18px;
+            padding: 12px;
+            background: #f8f8f8;
+            border-left: 5px solid #999;
+            border-radius: 7px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .view-btn,
+        .download-btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+        }
+
+        .view-btn {
+            background: #667eea;
+        }
+
+        .view-btn:hover {
+            background: #5568d9;
+        }
+
+        .download-btn {
+            background: #28a745;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .syllabus-view-btn {
+            background: #764ba2;
+        }
+
+        .syllabus-view-btn:hover {
+            background: #633d87;
+        }
+
+        .no-data {
+            margin-top: 15px;
+            color: #777;
+        }
+
+        @media (max-width: 700px) {
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Attractive dashboard UI */
+        .section,.welcome,.filters,.card { border:1px solid rgba(99,102,241,.10); box-shadow:0 14px 34px rgba(15,23,42,.08); border-radius:18px; }
+        .card:hover,.paper-card,.syllabus-card,.paper { transition:transform .2s ease, box-shadow .2s ease; }
+        .card:hover,.paper-card:hover,.syllabus-card:hover,.paper:hover { transform:translateY(-2px); box-shadow:0 16px 34px rgba(15,23,42,.10); }
+        input[type=file] { background:#fafbff; border:1px dashed #a5b4fc; border-radius:12px; padding:12px; }
+        button,.view-btn,.download-btn,.edit-btn,.delete-btn { transition:transform .15s ease, opacity .15s ease; }
+        button:hover,.view-btn:hover,.download-btn:hover,.edit-btn:hover,.delete-btn:hover { transform:translateY(-1px); opacity:.92; }
+
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <h2>
+            Question Paper Management System
+        </h2>
+
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </nav>
+
+
+    <div class="container">
+
+        <div class="welcome">
+
+            <h1>
+                Student Dashboard
+            </h1>
+
+            <p>
+                Search, view and download question papers and syllabus easily.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             QUESTION PAPER FILTERS
+        ========================== -->
+
+        <div class="filters">
+
+            <h2>
+                📄 Find Question Papers
+            </h2>
+
+            <div class="filter-grid">
+
+                <div>
+                    <label for="department">
+                        Department
+                    </label>
+
+                    <select id="department">
+
+                        <option value="">
+                            Loading departments...
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="level">
+                        Level
+                    </label>
+
+                    <select id="level">
+
+                        <option value="">
+                            Select Level
+                        </option>
+
+                        <option value="UG">
+                            UG
+                        </option>
+
+                        <option value="PG">
+                            PG
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="semester">
+                        Semester
+                    </label>
+
+                    <select id="semester">
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="subject">
+                        Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        id="subject"
+                        placeholder="Enter subject"
+                    >
+                </div>
+
+
+                <div>
+                    <label for="paperType">
+                        Paper Type
+                    </label>
+
+                    <select id="paperType">
+
+                        <option value="">
+                            Select Paper Type
+                        </option>
+
+                        <option value="Internal 1">Internal 1</option>
+                        <option value="Internal 2">Internal 2</option>
+                        <option value="Internal 3">Internal 3</option>
+                        <option value="Model">Model</option>
+                        <option value="University">University</option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="year">
+                        Year
+                    </label>
+
+                    <select id="year">
+
+                        <option value="">
+                            Select Year
+                        </option>
+
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+
+            <button
+                class="search-btn"
+                onclick="searchPapers()"
+            >
+                Search Question Papers
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             NOTIFICATIONS
+        ========================== -->
+
+        <div class="section">
+
+            <h2>
+                🔔 Notifications
+            </h2>
+
+            <div id="notificationList">
+
+                <p style="color:#777; margin-top:12px;">
+                    Loading notifications...
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             QUESTION PAPER RESULTS
+        ========================== -->
+
+        <div
+            class="section"
+            id="results"
+        >
+
+            <h2>
+                Question Papers
+            </h2>
+
+            <p style="margin-top:10px;color:#777;">
+                Select the required details and click Search.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             SYLLABUS SEARCH
+        ========================== -->
+
+        <div class="filters">
+
+            <h2>
+                📚 Find Syllabus
+            </h2>
+
+            <div class="filter-grid">
+
+                <div>
+
+                    <label for="syllabusDepartment">
+                        Department
+                    </label>
+
+                    <select id="syllabusDepartment">
+
+                        <option value="">
+                            Loading departments...
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="syllabusLevel">
+                        Level
+                    </label>
+
+                    <select id="syllabusLevel">
+
+                        <option value="">
+                            Select Level
+                        </option>
+
+                        <option value="UG">UG</option>
+                        <option value="PG">PG</option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="syllabusSemester">
+                        Semester
+                    </label>
+
+                    <select id="syllabusSemester">
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+
+                    </select>
+
+                </div>
+
+
+                <div>
+
+                    <label for="syllabusSubject">
+                        Subject
+                    </label>
+
+                    <input
+                        type="text"
+                        id="syllabusSubject"
+                        placeholder="Enter subject"
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label for="syllabusYear">
+                        Year
+                    </label>
+
+                    <select id="syllabusYear">
+
+                        <option value="">
+                            Select Year
+                        </option>
+
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="search-btn syllabus-search-btn"
+                onclick="searchSyllabus()"
+            >
+                Search Syllabus
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             SYLLABUS RESULTS
+        ========================== -->
+
+        <div
+            class="section"
+            id="syllabusResults"
+        >
+
+            <h2>
+                📚 Syllabus
+            </h2>
+
+            <p class="no-data">
+                Select the required details and click Search Syllabus.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const API_URL =
+            "http://127.0.0.1:8000";
+
+
+        /* =========================
+           LOAD DEPARTMENTS
+        ========================== */
+
+        async function loadDepartments() {
+
+            const departmentSelect =
+                document.getElementById("department");
+
+            const syllabusDepartmentSelect =
+                document.getElementById(
+                    "syllabusDepartment"
+                );
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/departments`
+                    );
+
+                const departments =
+                    await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        departments.detail ||
+                        "Failed to load departments."
+                    );
+
+                }
+
+
+                const defaultOption = `
+                    <option value="">
+                        Select Department
+                    </option>
+                `;
+
+
+                const options =
+                    departments.map(
+                        department => `
+                            <option value="${department.name}">
+                                ${department.name}
+                            </option>
+                        `
+                    ).join("");
+
+
+                departmentSelect.innerHTML =
+                    defaultOption + options;
+
+
+                syllabusDepartmentSelect.innerHTML =
+                    defaultOption + options;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Department loading error:",
+                    error
+                );
+
+
+                const errorOption = `
+                    <option value="">
+                        Unable to load departments
+                    </option>
+                `;
+
+
+                departmentSelect.innerHTML =
+                    errorOption;
+
+                syllabusDepartmentSelect.innerHTML =
+                    errorOption;
+
+            }
+
+        }
+
+
+        /* =========================
+           FORMAT EXAM DATE
+        ========================== */
+
+        function formatExamDate(dateValue) {
+
+            if (!dateValue) {
+                return "Not specified";
+            }
+
+            const date =
+                new Date(dateValue);
+
+            if (isNaN(date.getTime())) {
+                return dateValue;
+            }
+
+            return date.toLocaleString();
+
+        }
+
+
+        /* =========================
+           CHECK UPCOMING EXAM
+        ========================== */
+
+        function isUpcoming(dateValue) {
+
+            if (!dateValue) {
+                return false;
+            }
+
+            const examDate =
+                new Date(dateValue);
+
+            return examDate > new Date();
+
+        }
+
+
+        /* =========================
+           LOAD NOTIFICATIONS
+        ========================== */
+
+        async function loadNotifications() {
+
+            const notificationList =
+                document.getElementById(
+                    "notificationList"
+                );
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/question-papers?user_type=student`
+                    );
+
+                const papers =
+                    await response.json();
+
+                if (
+                    !response.ok ||
+                    !papers ||
+                    papers.length === 0
+                ) {
+
+                    notificationList.innerHTML = `
+
+                        <p style="color:#777;">
+                            🔔 No new question papers uploaded.
+                        </p>
+
+                    `;
+
+                    return;
+                }
+
+
+                const upcomingPapers =
+                    papers
+                        .filter(paper =>
+                            isUpcoming(
+                                paper.exam_date
+                            )
+                        )
+                        .sort(
+                            (a, b) =>
+                                new Date(a.exam_date) -
+                                new Date(b.exam_date)
+                        );
+
+
+                const latestPapers =
+                    papers
+                        .slice(-5)
+                        .reverse();
+
+
+                notificationList.innerHTML = "";
+
+
+                if (
+                    upcomingPapers.length > 0
+                ) {
+
+                    upcomingPapers.forEach(
+                        paper => {
+
+                            const notification =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            notification.className =
+                                "upcoming-notification";
+
+                            notification.innerHTML = `
+
+                                <div class="upcoming-title">
+                                    🔔 Upcoming Exam
+                                </div>
+
+                                <p style="margin-top:8px;">
+                                    <strong>
+                                        ${paper.subject}
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    Paper Type:
+                                    ${paper.paper_type}
+                                </p>
+
+                                <p>
+                                    Department:
+                                    ${paper.department}
+                                </p>
+
+                                <p>
+                                    Semester:
+                                    ${paper.semester}
+                                </p>
+
+                                <p>
+                                    📅 Exam Date:
+                                    ${formatExamDate(
+                                        paper.exam_date
+                                    )}
+                                </p>
+
+                            `;
+
+                            notificationList.appendChild(
+                                notification
+                            );
+
+                        }
+                    );
+
+                }
+
+
+                if (
+                    latestPapers.length > 0
+                ) {
+
+                    const heading =
+                        document.createElement(
+                            "p"
+                        );
+
+                    heading.style.marginTop =
+                        "20px";
+
+                    heading.style.fontWeight =
+                        "bold";
+
+                    heading.textContent =
+                        "Recent Uploads";
+
+                    notificationList.appendChild(
+                        heading
+                    );
+
+
+                    latestPapers.forEach(
+                        paper => {
+
+                            const notification =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            notification.className =
+                                "notification";
+
+                            notification.innerHTML = `
+
+                                🔔
+                                <strong>
+                                    New Question Paper Uploaded
+                                </strong>
+
+                                <p style="margin-top:8px;">
+
+                                    ${paper.subject}
+                                    -
+                                    ${paper.paper_type}
+                                    -
+                                    ${paper.year}
+
+                                </p>
+
+                            `;
+
+                            notificationList.appendChild(
+                                notification
+                            );
+
+                        }
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                notificationList.innerHTML = `
+
+                    <p style="color:red;">
+                        Cannot load notifications.
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           SEARCH QUESTION PAPERS
+        ========================== */
+
+        async function searchPapers() {
+
+            const department =
+                document.getElementById(
+                    "department"
+                ).value;
+
+            const level =
+                document.getElementById(
+                    "level"
+                ).value;
+
+            const semester =
+                document.getElementById(
+                    "semester"
+                ).value;
+
+            const subject =
+                document.getElementById(
+                    "subject"
+                ).value;
+
+            const paperType =
+                document.getElementById(
+                    "paperType"
+                ).value;
+
+            const year =
+                document.getElementById(
+                    "year"
+                ).value;
+
+            const results =
+                document.getElementById(
+                    "results"
+                );
+
+
+            results.innerHTML =
+                "<p>Searching...</p>";
+
+
+            try {
+
+                const params =
+                    new URLSearchParams();
+
+
+                if (department) {
+                    params.append(
+                        "department",
+                        department
+                    );
+                }
+
+                if (level) {
+                    params.append(
+                        "level",
+                        level
+                    );
+                }
+
+                if (semester) {
+                    params.append(
+                        "semester",
+                        semester
+                    );
+                }
+
+                if (subject) {
+                    params.append(
+                        "subject",
+                        subject
+                    );
+                }
+
+                if (paperType) {
+                    params.append(
+                        "paper_type",
+                        paperType
+                    );
+                }
+
+                if (year) {
+                    params.append(
+                        "year",
+                        year
+                    );
+                }
+
+
+                const response =
+                    await fetch(
+                        `${API_URL}/question-papers?${params.toString()}&user_type=student`
+                    );
+
+
+                const papers =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    results.innerHTML = `
+
+                        <p style="color:red;">
+                            Failed to search question papers.
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                if (
+                    papers.length === 0
+                ) {
+
+                    results.innerHTML = `
+
+                        <h2>
+                            Search Results
+                        </h2>
+
+                        <p
+                            style="
+                                margin-top:15px;
+                                color:#777;
+                            "
+                        >
+                            No question papers found.
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                results.innerHTML = `
+
+                    <h2>
+                        Search Results
+                    </h2>
+
+                `;
+
+
+                papers.forEach(
+                    paper => {
+
+                        const paperCard =
+                            document.createElement(
+                                "div"
+                            );
+
+                        paperCard.className =
+                            "paper-card";
+
+
+                        const upcoming =
+                            isUpcoming(
+                                paper.exam_date
+                            );
+
+
+                        paperCard.innerHTML = `
+
+                            ${
+                                upcoming
+                                ?
+                                `
+                                <span class="exam-badge">
+                                    🔔 Upcoming Exam
+                                </span>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <h3>
+                                ${paper.subject}
+                            </h3>
+
+
+                            <p>
+                                <strong>
+                                    Paper ID:
+                                </strong>
+                                ${paper.id}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Department:
+                                </strong>
+                                ${paper.department}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Level:
+                                </strong>
+                                ${paper.level}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Semester:
+                                </strong>
+                                ${paper.semester}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Paper Type:
+                                </strong>
+                                ${paper.paper_type}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Year:
+                                </strong>
+                                ${paper.year}
+                            </p>
+
+
+                            ${
+                                paper.exam_date
+                                ?
+                                `
+                                <p>
+                                    <strong>
+                                        Exam Date:
+                                    </strong>
+                                    ${formatExamDate(
+                                        paper.exam_date
+                                    )}
+                                </p>
+                                `
+                                :
+                                ""
+                            }
+
+
+                            <p>
+                                <strong>
+                                    File:
+                                </strong>
+
+                                ${
+                                    paper.file_name ||
+                                    "Not available"
+                                }
+
+                            </p>
+
+
+                            ${
+                                upcoming
+                                ?
+                                `
+
+                                <div class="locked-badge">
+
+                                    🔒 Question paper is locked.
+
+                                    <br>
+
+                                    <span
+                                        style="
+                                            font-weight:normal;
+                                            display:block;
+                                            margin-top:5px;
+                                        "
+                                    >
+                                        View and Download will be available after the exam date and time.
+                                    </span>
+
+                                </div>
+
+                                `
+                                :
+                                paper.file_path
+                                ?
+                                `
+
+                                <div class="action-buttons">
+
+                                    <a
+                                        href="${API_URL}/question-papers/${paper.id}/view?user_type=student"
+                                        target="_blank"
+                                        class="view-btn"
+                                    >
+                                        👁️ View PDF
+                                    </a>
+
+
+                                    <a
+                                        href="${API_URL}/question-papers/${paper.id}/download?user_type=student"
+                                        class="download-btn"
+                                    >
+                                        ⬇️ Download PDF
+                                    </a>
+
+                                </div>
+
+                                `
+                                :
+                                `
+
+                                <p
+                                    style="
+                                        margin-top:15px;
+                                        color:#999;
+                                    "
+                                >
+                                    PDF file not available.
+                                </p>
+
+                                `
+
+                            }
+
+                        `;
+
+
+                        results.appendChild(
+                            paperCard
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                results.innerHTML = `
+
+                    <p style="color:red;">
+                        Cannot connect to the server.
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           SEARCH SYLLABUS
+        ========================== */
+
+        async function searchSyllabus() {
+
+            const department =
+                document.getElementById(
+                    "syllabusDepartment"
+                ).value;
+
+            const level =
+                document.getElementById(
+                    "syllabusLevel"
+                ).value;
+
+            const semester =
+                document.getElementById(
+                    "syllabusSemester"
+                ).value;
+
+            const subject =
+                document.getElementById(
+                    "syllabusSubject"
+                ).value;
+
+            const year =
+                document.getElementById(
+                    "syllabusYear"
+                ).value;
+
+            const syllabusResults =
+                document.getElementById(
+                    "syllabusResults"
+                );
+
+
+            syllabusResults.innerHTML =
+                "<h2>📚 Syllabus</h2><p style='margin-top:15px;'>Searching...</p>";
+
+
+            try {
+
+                const params =
+                    new URLSearchParams();
+
+
+                if (department) {
+                    params.append(
+                        "department",
+                        department
+                    );
+                }
+
+                if (level) {
+                    params.append(
+                        "level",
+                        level
+                    );
+                }
+
+                if (semester) {
+                    params.append(
+                        "semester",
+                        semester
+                    );
+                }
+
+                if (subject) {
+                    params.append(
+                        "subject",
+                        subject
+                    );
+                }
+
+                if (year) {
+                    params.append(
+                        "year",
+                        year
+                    );
+                }
+
+
+                const response =
+                    await fetch(
+                        `${API_URL}/syllabus?${params.toString()}`
+                    );
+
+
+                const syllabus =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    syllabusResults.innerHTML = `
+
+                        <h2>
+                            📚 Syllabus
+                        </h2>
+
+                        <p style="color:red; margin-top:15px;">
+                            Failed to load syllabus.
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                if (
+                    !syllabus ||
+                    syllabus.length === 0
+                ) {
+
+                    syllabusResults.innerHTML = `
+
+                        <h2>
+                            📚 Syllabus
+                        </h2>
+
+                        <p class="no-data">
+                            No syllabus found for the selected details.
+                        </p>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                syllabusResults.innerHTML = `
+
+                    <h2>
+                        📚 Syllabus Results
+                    </h2>
+
+                `;
+
+
+                syllabus.forEach(
+                    item => {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+                        card.className =
+                            "syllabus-card";
+
+
+                        card.innerHTML = `
+
+                            <h3>
+                                ${item.subject}
+                            </h3>
+
+
+                            <p>
+                                <strong>
+                                    Syllabus ID:
+                                </strong>
+                                ${item.id}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Department:
+                                </strong>
+                                ${item.department}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Level:
+                                </strong>
+                                ${item.level}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Semester:
+                                </strong>
+                                ${item.semester}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    Year:
+                                </strong>
+                                ${item.year}
+                            </p>
+
+
+                            <p>
+                                <strong>
+                                    File:
+                                </strong>
+                                ${item.file_name || "Not available"}
+                            </p>
+
+
+                            ${
+                                item.file_path
+                                ?
+                                `
+
+                                <div class="action-buttons">
+
+                                    <a
+                                        href="${API_URL}/syllabus/${item.id}/view"
+                                        target="_blank"
+                                        class="view-btn syllabus-view-btn"
+                                    >
+                                        👁️ View Syllabus
+                                    </a>
+
+
+                                    <a
+                                        href="${API_URL}/syllabus/${item.id}/download"
+                                        class="download-btn"
+                                    >
+                                        ⬇️ Download Syllabus
+                                    </a>
+
+                                </div>
+
+                                `
+                                :
+                                `
+
+                                <p
+                                    style="
+                                        margin-top:15px;
+                                        color:#999;
+                                    "
+                                >
+                                    Syllabus file not available.
+                                </p>
+
+                                `
+                            }
+
+                        `;
+
+
+                        syllabusResults.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                syllabusResults.innerHTML = `
+
+                    <h2>
+                        📚 Syllabus
+                    </h2>
+
+                    <p style="color:red; margin-top:15px;">
+                        Cannot connect to the server.
+                    </p>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =========================
+           LOGOUT
+        ========================== */
+
+        function logout() {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+
+        /* =========================
+           INITIAL LOAD
+        ========================= */
+
+        loadDepartments();
+        loadNotifications();
+
+    </script>
+
+</body>
+</html>
