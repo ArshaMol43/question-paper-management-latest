@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="api-config.js"></script>
 
     <title>Create Account - Question Paper Management System</title>
 
@@ -218,6 +219,8 @@
 
 <script>
 
+const API_URL = window.API_BASE_URL;
+
 document.getElementById("registerForm").addEventListener(
     "submit",
     async function(event) {
@@ -263,7 +266,7 @@ document.getElementById("registerForm").addEventListener(
         try {
 
             const response = await fetch(
-                "/register",
+                `${API_URL}/register`,
                 {
                     method: "POST",
 

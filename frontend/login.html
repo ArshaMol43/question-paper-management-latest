@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="api-config.js"></script>
     <title>Login - Question Paper Management System</title>
 
     <style>
@@ -167,6 +168,8 @@
 
 <script>
 
+const API_URL = window.API_BASE_URL;
+
 document.getElementById("loginForm").addEventListener(
     "submit",
     async function(event) {
@@ -188,7 +191,7 @@ document.getElementById("loginForm").addEventListener(
         try {
 
             const response = await fetch(
-                "/login",
+                `${API_URL}/login`,
                 {
                     method: "POST",
 
